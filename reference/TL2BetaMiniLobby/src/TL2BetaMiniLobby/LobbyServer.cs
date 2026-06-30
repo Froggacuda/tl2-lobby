@@ -44,7 +44,23 @@ namespace TL2BetaMiniLobby
         /// their own public IP; if unset, the #5 substitution is skipped (co-located hosting won't reach
         /// remote joiners until it's configured).</summary>
         public static string RelayPublicIP => Environment.GetEnvironmentVariable("TL2_RELAY_IP") ?? "";
-        private const string RelayLanIP = "192.168.0.10";   // advertised to LAN peers (direct, no hairpin)
+        /// <summary>The lobby's own LAN IP, advertised to LAN peers on the (parked) relay path. Auto-detected
+        /// from the primary outbound interface so no operator value is baked in; override with TL2_RELAY_LAN_IP.</summary>
+        private static string RelayLanIP =>
+            Environment.GetEnvironmentVariable("TL2_RELAY_LAN_IP") ?? DetectLanIPv4();
+
+        /// <summary>Best-effort local IPv4 of the primary interface. The UDP "connect" sends no packet — it just
+        /// makes the OS pick the source interface for the default route. Falls back to loopback on failure.</summary>
+        private static string DetectLanIPv4()
+        {
+            try
+            {
+                using Socket s = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                s.Connect("203.0.113.1", 65530);   // RFC 5737 documentation address; no traffic is sent
+                return (s.LocalEndPoint as IPEndPoint)?.Address.ToString() ?? "127.0.0.1";
+            }
+            catch { return "127.0.0.1"; }
+        }
 
         private sealed class RelaySession   // one host<->joiner pairing; routes purely by source endpoint
         {

@@ -442,8 +442,8 @@ namespace TL2BetaMiniLobby
             // non-degenerate runic SUCCESS capture (captures/runic_success_broker_decode.txt).
             //
             // WHY THE OLD "identity/LoginKey" READING WORKED ON LAN: the client's op8 LoginKey (6B) IS
-            // its own masked PRIVATE endpoint (privIP+privPort) — it decodes cleanly to 192.168.0.103:64083
-            // in the runic capture. Echoing peerLoginKey verbatim therefore delivers the peer's PRIVATE ep
+            // its own masked PRIVATE endpoint (privIP+privPort) — it decodes cleanly to the joiner's private
+            // LAN endpoint in the runic capture. Echoing peerLoginKey verbatim therefore delivers the peer's PRIVATE ep
             // correctly (LAN-reachable). What we got WRONG was bytes 6-11 (the PUBLIC ep): we filled them
             // with [0x42][session][deriv] garbage, so cross-NAT the client's getaddrinfo on the public
             // candidate failed immediately ("network name invalid" / firewall error) — the live WAN failure.
