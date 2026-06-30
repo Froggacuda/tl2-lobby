@@ -1,0 +1,14 @@
+*.pcap
+*.pcapng
+captures/
+.DS_Store
+# reference/TL2BetaMiniLobby is the buildable lobby source (Crypto137 MIT + our mods) — TRACKED.
+# Only build artifacts below are ignored.
+build/
+bin/
+obj/
+**/publish/
+*.exe
+*.dll
+*.pdb
+re/Torchlight2.exe

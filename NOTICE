@@ -1,0 +1,38 @@
+tl2-lobby
+Copyright 2026 Froggacuda
+
+This product is licensed under the GNU Affero General Public License, Version 3
+(AGPL-3.0) — see LICENSE.
+
+------------------------------------------------------------------------------
+Upstream / third-party software
+------------------------------------------------------------------------------
+This project is a derivative work of **TL2BetaMiniLobby** by **Crypto137**
+(https://github.com/Crypto137/TL2BetaMiniLobby), used and modified under the
+terms of the MIT License. Full credit to Crypto137 for the original lobby
+implementation that this work builds on.
+
+Those upstream portions remain under their original MIT License; the combined /
+modified work is distributed under AGPL-3.0 (MIT is permissive and permits this
+relicensing of the combined work, provided the MIT notice is preserved). The
+full MIT notice is reproduced in THIRD-PARTY-NOTICES.txt.
+
+------------------------------------------------------------------------------
+Independence / legal posture (re: Torchlight II / Runic, a separate party)
+------------------------------------------------------------------------------
+This is an independent, community, non-commercial reimplementation of a network
+lobby/matchmaking service, developed via clean-room reverse engineering of a
+network protocol for interoperability purposes.
+
+This project:
+  * contains NO source code, binaries, art, audio, or other assets from
+    Torchlight II, Runic Games, Perfect World, or any successor rights holder;
+  * redistributes nothing belonging to those parties — users supply their own
+    legitimately-owned copy of the game;
+  * is not affiliated with, endorsed by, or sponsored by Runic Games, Perfect
+    World, or any rights holder. "Torchlight" and related marks are the property
+    of their respective owners and are used here only nominatively to describe
+    interoperability.
+
+See docs/LEGAL.md for the full rationale (EU Software Directive 2009/24/EC Art. 6
+interoperability right, clean-room methodology, and non-commercial intent).
