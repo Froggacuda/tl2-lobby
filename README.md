@@ -63,9 +63,8 @@ home-broadband players are unaffected.
 > **Heads-up:** the lobby is an unsigned binary, so the first time you run it Windows
 > SmartScreen may say *"Windows protected your PC."* Click **More info → Run anyway**.
 > Some antivirus may also flag a brand-new unsigned exe; the full source is in this repo
-> if you'd rather build it yourself.
-
-See [`docs/DEPLOY.md`](docs/DEPLOY.md) for running it as an always-on service.
+> if you'd rather build it yourself. Anything not working? See
+> **[Troubleshooting & FAQ](docs/TROUBLESHOOTING.md)**.
 
 ## Join a lobby
 
@@ -81,14 +80,17 @@ See [`docs/DEPLOY.md`](docs/DEPLOY.md) for running it as an always-on service.
 No account setup is required by the lobby — it doesn't authenticate you. If you have a
 Runic/TL2 login you can still use it; nothing is sent to Runic.
 
+> **Can't connect or stuck?** → **[Troubleshooting & FAQ](docs/TROUBLESHOOTING.md)**. The
+> [can't-connect checklist](docs/TROUBLESHOOTING.md#my-friends-cant-connect--check-your-firewall)
+> fixes most problems (usually a missing **UDP** port-forward, or a cellular/CGNAT connection).
+
 ---
 
 ## Docs
+- [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) — **stuck? start here** (SmartScreen, "can't connect" / NAT, config)
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — how TL2 multiplayer works + this design
-- [`docs/DEPLOY.md`](docs/DEPLOY.md) — running the lobby as a service
-- [`docs/PROTOCOL.md`](docs/PROTOCOL.md) / [`docs/RE-FINDINGS.md`](docs/RE-FINDINGS.md) — the lobby protocol, reverse-engineered
+- [`docs/PROTOCOL.md`](docs/PROTOCOL.md) — the lobby protocol, reverse-engineered
 - [`docs/LEGAL.md`](docs/LEGAL.md) — legal posture
-- [`docs/FEASIBILITY.md`](docs/FEASIBILITY.md) · [`docs/ALPHA_PLAN.md`](docs/ALPHA_PLAN.md) — background / project history
 
 ## Credits
 This project stands on the shoulders of

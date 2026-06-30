@@ -1,0 +1,40 @@
+name: "🐛 Bug report"
+description: "Something is broken or behaves unexpectedly (not a connection/NAT issue)"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For "friends can't connect" / firewall problems, use the **Connection problem** template instead.
+        For SmartScreen or antivirus warnings, see the **[FAQ](https://github.com/Froggacuda/tl2-lobby/blob/main/docs/TROUBLESHOOTING.md)** — those are expected for an unsigned binary.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Release tag, or commit hash if you built from source.
+      placeholder: "v0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "e.g. Windows 11 23H2"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Logs
+      description: Relevant `server.log` output (run with `-debug` for detail), or any error text.
+      render: text
+    validations:
+      required: false

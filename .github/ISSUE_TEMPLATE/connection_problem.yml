@@ -1,0 +1,67 @@
+name: "🔌 Connection problem"
+description: "Friends can't connect, or you see \"check your firewall\""
+title: "[Connection] "
+labels: ["connection"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, please skim the **[Troubleshooting & FAQ](https://github.com/Froggacuda/tl2-lobby/blob/main/docs/TROUBLESHOOTING.md)** — the
+        "[friends can't connect](https://github.com/Froggacuda/tl2-lobby/blob/main/docs/TROUBLESHOOTING.md#my-friends-cant-connect--check-your-firewall)"
+        checklist resolves most cases (usually a missing **UDP** port-forward or a CGNAT/cellular connection).
+  - type: checkboxes
+    id: prechecks
+    attributes:
+      label: I checked the basics
+      options:
+        - label: I read the Troubleshooting checklist
+          required: true
+        - label: I port-forwarded **both TCP and UDP** on port 4549 to the lobby PC
+          required: false
+        - label: My friend's `local_settings.txt` has `LOBBYHOST :<my ip>` and `LOBBYPORT :4549`
+          required: false
+  - type: dropdown
+    id: side
+    attributes:
+      label: Which side fails?
+      options:
+        - "I'm the host (running the lobby)"
+        - "I'm the joiner"
+        - "Both / not sure"
+    validations:
+      required: true
+  - type: dropdown
+    id: nat
+    attributes:
+      label: Connection type of the person who can't connect
+      description: Cellular, Starlink, and carrier-grade NAT are a known v0.1 limitation (direct punch-through only).
+      options:
+        - "Home broadband (cable / fiber / DSL)"
+        - "Cellular / mobile hotspot"
+        - "Starlink / satellite"
+        - "Behind CGNAT (or unsure)"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS of the lobby host
+      placeholder: "e.g. Windows 11 23H2"
+    validations:
+      required: false
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens?
+      description: What do you see in-game, and at what point does it fail?
+      placeholder: "Joiner sees 'check your firewall' immediately after clicking Join; loading screen freezes."
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Lobby server.log
+      description: Paste the relevant part of `server.log` from the lobby PC. Run the lobby with `-debug` for the most useful output. (No need to redact private LAN IPs — but feel free to.)
+      render: text
+    validations:
+      required: false

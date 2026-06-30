@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Troubleshooting & FAQ — read this first!
+    url: https://github.com/Froggacuda/tl2-lobby/blob/main/docs/TROUBLESHOOTING.md
+    about: SmartScreen warnings, "can't connect" / NAT problems, and config questions are answered here. Most issues are solved in 2 minutes without opening a ticket.
+  - name: 💬 Torchlight community (Reddit)
+    url: https://www.reddit.com/r/Torchlight/
+    about: General Torchlight 2 discussion, modding, and player help.
