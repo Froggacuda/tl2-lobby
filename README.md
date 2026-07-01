@@ -79,10 +79,10 @@ players are unaffected.
 ### Verify your download
 
 The release binary is unsigned, so verify its integrity before running it. The SHA-256 of
-`tl2-lobby-v0.1.0-win-x64.zip` (v0.1.0 release) is:
+`tl2-lobby-v0.2.0-win-x64.zip` (v0.2.0 release) is:
 
 ```
-92bd793e934a8f9ef5578b6381de7e3de3628dbcc081138f37ee6f15a213a11f
+0904f5cdd85692542a9f1d23459e22190da8b471c7d8bfbf0590e9f6a5c4861b
 ```
 
 Check it after downloading — the output must match **exactly**:
