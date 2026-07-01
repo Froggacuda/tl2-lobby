@@ -43,7 +43,31 @@ namespace TL2BetaMiniLobby
         /// EMPTY by default — a public release must NOT bake in any one operator's IP. Self-hosters set it to
         /// their own public IP; if unset, the #5 substitution is skipped (co-located hosting won't reach
         /// remote joiners until it's configured).</summary>
-        public static string RelayPublicIP => Environment.GetEnvironmentVariable("TL2_RELAY_IP") ?? "";
+        public static string RelayPublicIP => _relayPublicIP;
+        // Defaults to the operator's explicit TL2_RELAY_IP; NatForward may fill it from UPnP if left empty.
+        private static volatile string _relayPublicIP = Environment.GetEnvironmentVariable("TL2_RELAY_IP") ?? "";
+
+        /// <summary>Adopt a public IP learned from the router's UPnP/NAT-PMP IGD, so a self-hosting operator
+        /// doesn't have to set TL2_RELAY_IP by hand. The explicit env var ALWAYS wins (operators may point at
+        /// a domain or a specific address), so this only fills an empty value. The detected IP is rejected
+        /// unless it is publicly routable — a double-NAT/CGNAT router can report a private or 100.64/10
+        /// address, and advertising that to remote joiners is worse than the existing "unset" warning.</summary>
+        public static void AdoptDetectedPublicIP(IPAddress ip)
+        {
+            if (ip == null) return;
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("TL2_RELAY_IP"))) return;  // operator override wins
+            if (!string.IsNullOrEmpty(_relayPublicIP)) return;                                       // already set
+            byte[] b = ip.GetAddressBytes();
+            bool cgnat = b.Length == 4 && b[0] == 100 && b[1] >= 64 && b[1] <= 127;                  // RFC 6598
+            if (b.Length != 4 || IsPrivate(ip) || cgnat)
+            {
+                Logger.Log($"[#5] UPnP reported a non-routable external IP {ip} (double-NAT/CGNAT?) — " +
+                           "NOT using it; set TL2_RELAY_IP=<your real public IP> for co-located hosting.");
+                return;
+            }
+            _relayPublicIP = ip.ToString();
+            Logger.Log($"[#5] TL2_RELAY_IP unset — adopting UPnP-detected public IP {ip} for co-located host advertising.");
+        }
         /// <summary>The lobby's own LAN IP, advertised to LAN peers on the (parked) relay path. Auto-detected
         /// from the primary outbound interface so no operator value is baked in; override with TL2_RELAY_LAN_IP.</summary>
         private static string RelayLanIP =>
@@ -243,6 +267,7 @@ namespace TL2BetaMiniLobby
             Task.Run(async () => await AcceptConnectionsAsync());
             Logger.Log($"LobbyServer is listening on {BindIP}:{Port}...");
             StartUdpProbes();
+            NatForward.Start(Port);     // best-effort UPnP/NAT-PMP auto port-forward (off the critical path)
         }
 
         /// <summary>
@@ -315,6 +340,7 @@ namespace TL2BetaMiniLobby
         {
             _cts.Cancel();              // Cancel async tasks
             _listener?.Stop();          // Stop listening
+            NatForward.Stop();          // Remove any UPnP/NAT-PMP mappings we created
             DisconnectAllClients();     // Disconnect all clients
         }
 

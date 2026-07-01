@@ -244,9 +244,35 @@ namespace TL2BetaMiniLobby
                         foreach (GameServer g in Server.Games.GetAll())
                             if (g.Id == gameId21) { game21 = g; break; }
 
-                        Logger.Log($"{Username} op21 addrToken={BitConverter.ToUInt32(payload,0):X8} gameId=0x{gameId21:X} game={(game21?.Name ?? "NOT FOUND")} -> broker op22 (direct off op21)");
                         if (game21 != null)
-                            BrokerConnect(game21, addrToken, this);
+                        {
+                            // Host-join: op21 references a registered game. Broker joiner<->host, and
+                            // remember which game this client is in so its later MESH peer-connects
+                            // (which arrive with gameId=0) can reuse the session handle.
+                            Logger.Log($"{Username} op21 addrToken={BitConverter.ToUInt32(payload,0):X8} gameId=0x{gameId21:X} game={game21.Name} -> broker op22 (host-join)");
+                            PendingJoinGame = game21;
+                            BrokerConnect(game21.Host, this, game21);
+                        }
+                        else
+                        {
+                            // MESH peer-connect: TL2 co-op is a full peer-to-peer mesh — every player
+                            // connects to every other, not only the host. These requests carry the TARGET
+                            // PEER's token with gameId=0. Resolve the peer by token (the same lookup op32
+                            // uses) and broker the identical 2-endpoint op22 so 3+ player games complete.
+                            uint peerTok = BitConverter.ToUInt32(addrToken, 0);
+                            LobbyClient peer = Server.FindClientByToken(peerTok);
+                            GameServer ctx = PendingJoinGame ?? peer?.PendingJoinGame;
+                            if (peer != null && peer != this && ctx != null)
+                            {
+                                Logger.Log($"{Username} op21 addrToken={peerTok:X8} gameId=0x{gameId21:X} -> MESH peer-connect to {peer.Username} in {ctx.Name} -> broker op22");
+                                BrokerConnect(peer, this, ctx);
+                            }
+                            else
+                            {
+                                Logger.Log($"{Username} op21 addrToken={peerTok:X8} gameId=0x{gameId21:X} -> MESH peer-connect NOT brokered " +
+                                           $"({(peer == null ? "peer token not found" : peer == this ? "self" : "no game context")})");
+                            }
+                        }
                     }
                     return true;
 
@@ -403,17 +429,26 @@ namespace TL2BetaMiniLobby
         /// The addrToken on our LAN = the peer's IP bytes (LE) from its TCP connection.
         /// Slot: host=02, joiner=03 (from live capture).
         /// </summary>
-        private static void BrokerConnect(GameServer game, byte[] joinerAddrToken, LobbyClient joiner)
+        // Brokers a 2-endpoint op22 (+ op37 roster) between two players. `target` receives makeClient
+        // 0x02, `initiator` receives 0x03 (the initiator is the side that sent op21). For a host-join
+        // this is (game host, joiner); for a mesh peer-connect (op21 with gameId=0) it is (the other
+        // player, the requester). All endpoints come from the LobbyClient objects, so one path serves
+        // both; `gameCtx` supplies only the op37 session handle (game.Id) — never an endpoint.
+        private static void BrokerConnect(LobbyClient target, LobbyClient initiator, GameServer gameCtx)
         {
-            LobbyClient host = game.Host;
+            LobbyClient host = target;       // 0x02 side (host-join: the game host)
+            LobbyClient joiner = initiator;  // 0x03 side (the client that sent op21)
+            GameServer game = gameCtx;
             if (host == null)
             {
-                Logger.Log($"BrokerConnect: game {game.Id:X} has no host client — cannot broker");
+                Logger.Log("BrokerConnect: no target client — cannot broker");
                 return;
             }
 
-            // Derive IP bytes for each peer from their TCP connection address.
-            byte[] hostIp = game.HostAddress.GetAddressBytes();   // 4 bytes LE
+            // Derive IP bytes for each peer from their TCP connection address (works for a host OR a
+            // peer target — the endpoint is the client's own connection, not the game registration).
+            byte[] hostIp = (host.TcpClient.Client.RemoteEndPoint as System.Net.IPEndPoint)
+                              ?.Address.GetAddressBytes() ?? new byte[4];
             byte[] joinerIp = (joiner.TcpClient.Client.RemoteEndPoint as System.Net.IPEndPoint)
                               ?.Address.GetAddressBytes() ?? new byte[4];
 

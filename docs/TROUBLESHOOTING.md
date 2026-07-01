@@ -42,8 +42,10 @@ This is the most common issue. Work down the list **in order** — the first few
 majority of cases.
 
 1. **Port-forward BOTH TCP and UDP on port `4549`** to the lobby PC on your router. This is the
-   #1 cause. Many people forward only TCP (or only UDP) — you need **both**. UDP is what carries
-   the actual peer-to-peer connection.
+   #1 cause. The lobby tries to do this automatically via **UPnP** on startup — check `server.log`
+   for `UPnP: mapped 4549/tcp` **and** `UPnP: mapped 4549/udp`. If you don't see both (router UPnP
+   off/unsupported), forward them manually. Many people forward only TCP (or only UDP) — you need
+   **both**. UDP is what carries the actual peer-to-peer connection.
 
 2. **Check each friend's `local_settings.txt`** (see [below](#where-is-local_settingstxt--how-do-i-edit-it)):
    ```

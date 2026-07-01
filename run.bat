@@ -1,6 +1,7 @@
 @echo off
 REM ============================================================
 REM  TL2 Community Lobby — launcher (sample)
+REM  Project / source / updates:  https://github.com/Froggacuda/tl2-lobby
 REM ============================================================
 REM  Rename your built/published exe to tl2lobby.exe (or edit the
 REM  last line), drop this file next to it, and run it.

@@ -29,14 +29,20 @@ browser and brokers the peer-to-peer connection between host and joiner.
 - ✅ **In-game server browser** — hosted games show up in the normal TL2 browser.
 - ✅ **Direct P2P play, proven on a real LAN and over the open internet** between friends
   on ordinary home connections.
+- ✅ **Full multiplayer (3+ players)** — the lobby brokers the peer-to-peer *mesh* (in TL2
+  co-op every player connects to every other, not just the host), so games beyond host + 1
+  work. Proven with a live 3-player game; no player cap in the lobby (standard 4, or 8 with mods).
+- ✅ **Automatic port-forwarding (UPnP / NAT-PMP)** — the lobby opens port 4549 on your
+  router on startup if it supports UPnP, so hosting often needs zero manual router setup.
 - ✅ **Self-hosting** — you can run the lobby on the same PC/LAN you host games from
-  (set `TL2_RELAY_IP`, see below).
+  (public IP auto-detected via UPnP, or set `TL2_RELAY_IP`, see below).
 
 ### Known limitation
-Connections use **direct NAT punch-through**. Players behind **strict / symmetric NAT**
-(notably cellular / CGNAT) may fail to connect. A server-side **relay fallback** for
-those cases is in progress but **not finished yet** — see [`docs/`](docs/). Most
-home-broadband players are unaffected.
+Every peer-to-peer link uses **direct NAT punch-through** — including the joiner-to-joiner
+links in a 3+ player mesh. A player behind **strict / symmetric NAT** (notably cellular /
+CGNAT) may fail to connect to some or all peers. A server-side **relay fallback** for those
+cases is in progress but **not finished yet** — see [`docs/`](docs/). Most home-broadband
+players are unaffected.
 
 ---
 
@@ -53,12 +59,16 @@ home-broadband players are unaffected.
 2. **Run it.** A sample launcher is provided in [`run.bat`](run.bat) — rename the
    published exe to `tl2lobby.exe` next to it, or edit the path. It logs cleanly to
    `server.log` by default; add `-debug` for verbose diagnostics.
-3. **Port-forward `4549` (both TCP and UDP)** to the lobby machine on your router.
+3. **Port-forwarding — automatic where possible.** On startup the lobby opens TCP + UDP
+   `4549` on your router via **UPnP / NAT-PMP** (look for `UPnP: mapped 4549…` in `server.log`).
+   If your router has UPnP disabled, forward **`4549` (both TCP and UDP)** manually. Disable
+   the auto-attempt entirely with `TL2_UPNP_OFF=1`.
 4. **Share your address** with friends — your public IP, or a domain / dynamic-DNS name.
-5. **Self-hosting:** if you host *games* on the same PC or LAN as the lobby, set
-   `TL2_RELAY_IP=<your public IP>` (uncomment the line in `run.bat`) so remote friends can
-   reach your games. The lobby otherwise only knows your private address. Remote-only
-   hosting doesn't need it.
+5. **Self-hosting:** if you host *games* on the same PC or LAN as the lobby, the lobby needs
+   to advertise your **public** IP to remote friends (it otherwise only knows your private
+   address). If UPnP is available this is **detected automatically**; otherwise set
+   `TL2_RELAY_IP=<your public IP>` (uncomment the line in `run.bat`). Remote-only hosting
+   doesn't need it.
 
 > **Heads-up:** the lobby is an unsigned binary, so the first time you run it Windows
 > SmartScreen may say *"Windows protected your PC."* Click **More info → Run anyway**.
@@ -115,6 +125,10 @@ This project stands on the shoulders of
 original open-source Torchlight 2 lobby implementation. tl2-lobby is a modified derivative
 of that work — huge thanks to Crypto137. The upstream code is MIT-licensed; see
 [`THIRD-PARTY-NOTICES.txt`](THIRD-PARTY-NOTICES.txt).
+
+**Special thanks** to the playtesters who helped prove the lobby, NAT brokering, and
+multiplayer mesh across real home connections: **Yeggis, Sparklespanks, Goretsky, Ktinga,
+and Boomclad.**
 
 Torchlight 2 is a trademark of its respective owners. This is an unofficial, fan-made,
 non-commercial project with no affiliation to or endorsement by Runic Games or any
