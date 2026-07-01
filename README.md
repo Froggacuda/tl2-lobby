@@ -63,6 +63,9 @@ players are unaffected.
    `4549` on your router via **UPnP / NAT-PMP** (look for `UPnP: mapped 4549…` in `server.log`).
    If your router has UPnP disabled, forward **`4549` (both TCP and UDP)** manually. Disable
    the auto-attempt entirely with `TL2_UPNP_OFF=1`.
+   > **Hosting regularly?** Add a **static** `4549` (TCP + UDP) forward in your router *as well* —
+   > belt-and-suspenders. UPnP mappings are leases: a router reboot (or a lease expiry) drops the
+   > forward until the lobby restarts and re-maps it, whereas a static rule always stands.
 4. **Share your address** with friends — your public IP, or a domain / dynamic-DNS name.
 5. **Self-hosting:** if you host *games* on the same PC or LAN as the lobby, the lobby needs
    to advertise your **public** IP to remote friends (it otherwise only knows your private

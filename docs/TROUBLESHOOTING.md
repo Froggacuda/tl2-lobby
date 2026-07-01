@@ -46,6 +46,9 @@ majority of cases.
    for `UPnP: mapped 4549/tcp` **and** `UPnP: mapped 4549/udp`. If you don't see both (router UPnP
    off/unsupported), forward them manually. Many people forward only TCP (or only UDP) — you need
    **both**. UDP is what carries the actual peer-to-peer connection.
+   Even when UPnP works, if you host regularly it's worth adding a **static** `4549` (TCP + UDP)
+   forward *in addition* — UPnP mappings are leases that a router reboot or lease expiry can drop
+   (until the lobby restarts and re-maps), so a static rule is cheap belt-and-suspenders.
 
 2. **Check each friend's `local_settings.txt`** (see [below](#where-is-local_settingstxt--how-do-i-edit-it)):
    ```
