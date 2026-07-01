@@ -73,8 +73,9 @@ majority of cases.
 
 5. **Strict / symmetric NAT or CGNAT (known limitation).** If you (or your friend) are on
    **cellular**, **Starlink**, or an ISP that uses **carrier-grade NAT**, direct connections may
-   be impossible no matter what you do — there's no public port to forward. v0.1 uses direct NAT
-   punch-through only; a server-side **relay fallback** for these cases is planned for v0.2.
+   be impossible no matter what you do — there's no public port to forward. The current release uses
+   direct NAT punch-through only; a server-side **relay fallback** for these cases is in progress but
+   **not finished yet**, so a strict-NAT/CGNAT player may still be unable to connect for now.
    Tell-tale sign: home-broadband friends connect fine, but the cellular/CGNAT person always
    fails. (Not sure if you're behind CGNAT? If your router's WAN IP starts with `100.64.`–`100.127.`,
    or doesn't match your public IP from [whatismyip](https://www.whatismyip.com/), you probably are.)
