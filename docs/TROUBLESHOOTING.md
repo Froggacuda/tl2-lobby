@@ -5,6 +5,7 @@ Most problems fall into a few buckets. Find your symptom below.
 **Jump to:** [SmartScreen warning](#windows-protected-your-pc-smartscreen) ·
 [Antivirus](#antivirus-flagged-the-exe) ·
 [Friends can't connect](#my-friends-cant-connect--check-your-firewall) ·
+[Red firewall indicator](#tl2-shows-a-red-firewall-indicator-in-the-bottom-right-corner) ·
 [Empty server browser](#the-server-browser-is-empty-or-i-dont-see-my-friends-game) ·
 [Editing local_settings.txt](#where-is-local_settingstxt--how-do-i-edit-it) ·
 [Is the lobby working?](#how-do-i-know-the-lobby-is-running) ·
@@ -31,8 +32,9 @@ trigger for heuristic AV. The lobby has no network behavior beyond listening on 
 forwarding TL2 lobby traffic.
 
 If you'd rather not take our word for it: **build from source** (the exe is just the published
-output of the code in this repo), or upload the exe to [VirusTotal](https://www.virustotal.com/)
-to see the detections for yourself.
+output of the code in this repo), verify the download's checksum
+([Verify your download](../README.md#verify-your-download) — the release's SHA-256 is published),
+or upload the exe to [VirusTotal](https://www.virustotal.com/) to see the detections for yourself.
 
 ## My friends can't connect / "check your firewall"
 
@@ -71,6 +73,18 @@ majority of cases.
    Tell-tale sign: home-broadband friends connect fine, but the cellular/CGNAT person always
    fails. (Not sure if you're behind CGNAT? If your router's WAN IP starts with `100.64.`–`100.127.`,
    or doesn't match your public IP from [whatismyip](https://www.whatismyip.com/), you probably are.)
+
+## TL2 shows a red firewall indicator in the bottom-right corner
+
+**Normal, and not something this project causes or can fix.** That red firewall/connection
+indicator is **Torchlight 2's own client-side check** of your local network — it's built into
+the game and reflects your PC's firewall / router / NAT, not the lobby. You'll often see it
+even when multiplayer works fine: on its own it does **not** mean you can't connect, and the
+lobby neither triggers it nor can clear it (the lobby is a matchmaking broker — it never
+touches your local firewall).
+
+If your connections genuinely fail, the real cause is your NAT type, not this indicator — see
+[strict / symmetric NAT or CGNAT](#my-friends-cant-connect--check-your-firewall) above.
 
 ## The server browser is empty, or I don't see my friend's game
 

@@ -66,6 +66,23 @@ home-broadband players are unaffected.
 > if you'd rather build it yourself. Anything not working? See
 > **[Troubleshooting & FAQ](docs/TROUBLESHOOTING.md)**.
 
+### Verify your download
+
+The release binary is unsigned, so verify its integrity before running it. The SHA-256 of
+`tl2-lobby-v0.1.0-win-x64.zip` (v0.1.0 release) is:
+
+```
+92bd793e934a8f9ef5578b6381de7e3de3628dbcc081138f37ee6f15a213a11f
+```
+
+Check it after downloading — the output must match **exactly**:
+
+- **Windows (PowerShell):** `Get-FileHash tl2-lobby-v0.1.0-win-x64.zip -Algorithm SHA256`
+- **Windows (cmd):** `certutil -hashfile tl2-lobby-v0.1.0-win-x64.zip SHA256`
+- **macOS / Linux:** `shasum -a 256 tl2-lobby-v0.1.0-win-x64.zip`
+
+If it doesn't match, don't run it.
+
 ## Join a lobby
 
 1. In Torchlight 2's `local_settings.txt`, set:
